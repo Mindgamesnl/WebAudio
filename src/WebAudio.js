@@ -1,6 +1,6 @@
 class WebAudio {
 
-    constructor(source) {
+    constructor(source, onready) {
         this._source = source;
 
         //maudio meta data
@@ -11,6 +11,7 @@ class WebAudio {
         this.isLoading = false;
         this.isPlayable = false;
         this.isFading = false;
+        this.isFirstRun = true;
 
         //referance
         const that = this;
@@ -30,6 +31,10 @@ class WebAudio {
         this.soundElement.oncanplay = function () {
             that.isPlayable = true;
             that.isLoading = true;
+            if (that.isFirstRun) {
+                that.isFirstRun = false;
+                if (onready != null) onready();
+            }
         };
 
         this.soundElement.oncanplaythrough = function () {
@@ -95,6 +100,19 @@ class WebAudio {
                 cancel();
             }
         }, interval);
+    }
+
+    startDate(date) {
+        let start = new Date(date * 1000);
+        let seconds = Math.abs((start.getTime() - new Date().getTime()) / 1000);
+        let length = this.soundElement.duration;
+        if (seconds > length) {
+            //how many times it would have played
+            let times = Math.floor(seconds / length);
+            //remove other repetitions from time
+            seconds = seconds - (times * length);
+        }
+        this.setTime(seconds);
     }
 
     pause() {

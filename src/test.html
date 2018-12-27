@@ -1,4 +1,21 @@
 <script src="WebAudio.js"></script>
+
+<h1 onclick="test()">click me for test</h1>
+
 <script>
-    const media = new WebAudio("http://craftmend.com/a.mp3");
+    function test() {
+
+        const media = new WebAudio("http://craftmend.com/b.mp3", function () {
+            //the time the sound started, so if the browser gets refreshed it will pickup where it left op (math yo)
+            media.startDate(1545920910);
+            //repeat the sound on finish
+            media.setLooping(true);
+            //start the sound
+            media.play();
+            //fade the volume to 10% in 2000 MS, more math yo
+            media.setVolume(10, 2000);
+        });
+
+    }
+
 </script>
